@@ -1,0 +1,27 @@
+﻿    ÿÿÿÿ          ïSystem.Collections.Generic.Dictionary`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Drawing.Color, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]   VersionComparerHashSize
+KeyValuePairs  ’System.Collections.Generic.GenericEqualityComparer`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]óSystem.Collections.Generic.KeyValuePair`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Drawing.Color, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]][]   	   %   	      ’System.Collections.Generic.GenericEqualityComparer`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]              ñSystem.Collections.Generic.KeyValuePair`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Drawing.Color, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]   QSystem.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3aüÿÿÿñSystem.Collections.Generic.KeyValuePair`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Drawing.Color, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]   keyvalueSystem.Drawing.Color      Oak Wood PlanksùÿÿÿSystem.Drawing.Color   namevalue
+knownColorstate   	   
+PŠÅÿ       øÿÿÿüÿÿÿ	   Spruce Wood Planksöÿÿÿùÿÿÿ
+)?ÿ       õÿÿÿüÿÿÿ   Birch Wood Planksóÿÿÿùÿÿÿ
+‰¤Ëÿ       òÿÿÿüÿÿÿ   Jungle Wood Planksðÿÿÿùÿÿÿ
+>H‘ÿ       ïÿÿÿüÿÿÿ   Acacia Wood Planksíÿÿÿùÿÿÿ
+''§ÿ       ìÿÿÿüÿÿÿ   Dark Oak Wood Planksêÿÿÿùÿÿÿ
+ÿ       éÿÿÿüÿÿÿ   Stoneçÿÿÿùÿÿÿ
+JJJÿ       æÿÿÿüÿÿÿ   Dirtäÿÿÿùÿÿÿ
+ Fÿ       ãÿÿÿüÿÿÿ   Cobblestoneáÿÿÿùÿÿÿ
+///ÿ       àÿÿÿüÿÿÿ!   GlassÞÿÿÿùÿÿÿ
+»»»ÿ       Ýÿÿÿüÿÿÿ$   
+Block of GoldÛÿÿÿùÿÿÿ
+1í÷ÿ       Úÿÿÿüÿÿÿ'   
+Block of IronØÿÿÿùÿÿÿ
+‡‡‰ÿ       ×ÿÿÿüÿÿÿ*   BricksÕÿÿÿùÿÿÿ
+++¨ÿ       Ôÿÿÿüÿÿÿ-   
+Stone SlabÒÿÿÿùÿÿÿ
+“““ÿ       Ñÿÿÿüÿÿÿ0   Sandstone SlabÏÿÿÿùÿÿÿ
+³ÿÿÿ       Îÿÿÿüÿÿÿ3   Cobblestone SlabÌÿÿÿùÿÿÿ
+ÿ       Ëÿÿÿüÿÿÿ6   Bricks SlabÉÿÿÿùÿÿÿ
+  }ÿ       Èÿÿÿüÿÿÿ9   Stone Bricks SlabÆÿÿÿùÿÿÿ
+‘‘‘ÿ       Åÿÿÿüÿÿÿ<   Marble BrickÃÿÿÿùÿÿÿ
+        ¤  Âÿÿÿüÿÿÿ?   
+Oak Wood SlabÀÿÿÿùÿÿÿ
+:ŠÑÿ       
