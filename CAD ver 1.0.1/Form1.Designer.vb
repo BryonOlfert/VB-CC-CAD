@@ -58,7 +58,6 @@ Partial Class Form1
         Me.cmbRef = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.ImportDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -155,7 +154,7 @@ Partial Class Form1
         '
         'tsmMaterial
         '
-        Me.tsmMaterial.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectBlockMaterialToolStripMenuItem, Me.AddMaterialToolStripMenuItem, Me.ToolStripMenuItemEditBlock, Me.SaveMaterialsAsToolStripMenuItem, Me.LoadMaterialsToolStripMenuItem, Me.ImportDatabaseToolStripMenuItem})
+        Me.tsmMaterial.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectBlockMaterialToolStripMenuItem, Me.AddMaterialToolStripMenuItem, Me.ToolStripMenuItemEditBlock, Me.SaveMaterialsAsToolStripMenuItem, Me.LoadMaterialsToolStripMenuItem})
         Me.tsmMaterial.Name = "tsmMaterial"
         Me.tsmMaterial.Size = New System.Drawing.Size(62, 24)
         Me.tsmMaterial.Text = "Material"
@@ -171,6 +170,7 @@ Partial Class Form1
         '
         Me.cmbMaterials.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbMaterials.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+        Me.cmbMaterials.Items.AddRange(New Object() {"Stone"})
         Me.cmbMaterials.Name = "cmbMaterials"
         Me.cmbMaterials.Size = New System.Drawing.Size(121, 23)
         '
@@ -291,12 +291,6 @@ Partial Class Form1
         Me.Label2.TabIndex = 10
         Me.Label2.Text = "Reference layer"
         '
-        'ImportDatabaseToolStripMenuItem
-        '
-        Me.ImportDatabaseToolStripMenuItem.Name = "ImportDatabaseToolStripMenuItem"
-        Me.ImportDatabaseToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.ImportDatabaseToolStripMenuItem.Text = "Import Database"
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -354,5 +348,4 @@ Partial Class Form1
     Friend WithEvents FileToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents DeleteSizeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripComboBox2 As ToolStripComboBox
-    Friend WithEvents ImportDatabaseToolStripMenuItem As ToolStripMenuItem
 End Class

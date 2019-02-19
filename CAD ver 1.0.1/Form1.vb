@@ -72,7 +72,7 @@ Public Class Form1
                 If Not layerRef = layer Then
                     If Not dictPair.Key.X + offSetX < 110 Or dictPair.Key.Y + offSetY < 39 Then
                         pen = New SolidBrush(Color.FromArgb(255, 69, 89, 226))
-                        myRectangle = New Rectangle(dictPair.Key.X + offSetX, dictPair.Key.Y + offSetY, box, box)
+                        myRectangle = New Rectangle(dictPair.Key.X + offSetX + 1, dictPair.Key.Y + offSetY + 1, box - 2, box - 2)
                         CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                     End If
                 End If
@@ -89,7 +89,7 @@ Public Class Form1
                             pen = New SolidBrush(dictPairMat.Value)
                         End If
                     Next
-                    myRectangle = New Rectangle(dictPair.Key.X + offSetX, dictPair.Key.Y + offSetY, box, box)
+                    myRectangle = New Rectangle(dictPair.Key.X + offSetX + 1, dictPair.Key.Y + offSetY + 1, box - 2, box - 2)
                     CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 End If
             Else
@@ -108,7 +108,7 @@ Public Class Form1
                     'nothing
                 Else
                     pen = New SolidBrush(Color.White)
-                    myRectangle = New Rectangle(dictPair.Key.X + offSetX, dictPair.Key.Y + offSetY, box, box)
+                    myRectangle = New Rectangle(dictPair.Key.X + offSetX + 1, dictPair.Key.Y + offSetY + 1, box - 2, box - 2)
                     CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 End If
             End If
@@ -120,7 +120,7 @@ Public Class Form1
                     'nothing
                 Else
                     pen = New SolidBrush(Color.White)
-                    myRectangle = New Rectangle(dictPair.Key.X + offSetX, dictPair.Key.Y + offSetY, box, box)
+                    myRectangle = New Rectangle(dictPair.Key.X + offSetX + 1, dictPair.Key.Y + offSetY + 1, box - 2, box - 2)
                     CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 End If
             Else
@@ -205,28 +205,28 @@ Public Class Form1
 
 
     'experimental subRoutine
-    'Private Sub boxSize(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseWheel
-    '    If pos.Delta < 0 Then
-    '        If box = 10 Then
-    '            '''''''nothing
-    '        Else
-    '            offSetX = offSetX / box
-    '            box -= 10
-    '            offSetX = offSetX * box
-    '        End If
-    '    Else
-    '        If box = 10240 Then
-    '            ''''''''''nothing    
-    '        Else
-    '            offSetX = offSetX / box
-    '            box += 10
-    '            offSetX = offSetX * box
-    '        End If
-    '    End If
-    '    clearForm()
-    '    loadBlocks()
-    '    loadGrid()
-    'End Sub
+    Private Sub boxSize(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseWheel
+        If pos.Delta < 0 Then
+            If box = 10 Then
+                '''''''nothing
+            Else
+                offSetX = offSetX / box
+                box -= 10
+                offSetX = offSetX * box
+            End If
+        Else
+            If box = 10240 Then
+                ''''''''''nothing    
+            Else
+                offSetX = offSetX / box
+                box += 10
+                offSetX = offSetX * box
+            End If
+        End If
+        clearForm()
+        loadBlocks()
+        loadGrid()
+    End Sub
 
     Private Sub boxClick(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseClick, MyBase.MouseMove
         If pos.Button = MouseButtons.Left Or pos.Button = MouseButtons.Right Then
@@ -287,10 +287,13 @@ Public Class Form1
                 End If
             ElseIf tool = "point" Then
                 Dim myRectangle As Rectangle
-                myRectangle = New Rectangle((Math.Floor(pos.X / box) * box), (Math.Floor(pos.Y / box) * box), box, box)
+                myRectangle = New Rectangle((Math.Floor(pos.X / box) * box) + 1, (Math.Floor(pos.Y / box) * box) + 1, box - 2, box - 2)
                 CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 AddToBlockDictionary((Math.Floor(pos.X / box) * box), (Math.Floor(pos.Y / box) * box), setMaterial)
             ElseIf tool = "line" Then
+
+                'y = mx + b
+
                 If lineTest = False Then
                     lineX = pos.X
                     LineY = pos.Y
@@ -348,7 +351,7 @@ Public Class Form1
                     Next
                 Next
             Else
-                myRectangle = New Rectangle((Math.Floor(pos.X / box) * box), (Math.Floor(pos.Y / box) * box), box, box)
+                myRectangle = New Rectangle((Math.Floor(pos.X / box) * box) + 1, (Math.Floor(pos.Y / box) * box) + 1, box - 2, box - 2)
                 CreateGraphics().FillRectangle(penz, rect:=myRectangle)
                 RemoveBlockFromDictionary(Math.Floor(pos.X / box) * box, Math.Floor(pos.Y / box) * box)
             End If
@@ -377,7 +380,7 @@ Public Class Form1
                                     'nothing
                                 Else
                                     pen = New SolidBrush(MyBase.BackColor)
-                                    myRectangle = New Rectangle(dictPair.Key.X + localOffSetX, dictPair.Key.Y + LocalOffSetY, box, box)
+                                    myRectangle = New Rectangle(dictPair.Key.X + localOffSetX + 1, dictPair.Key.Y + LocalOffSetY + 1, box - 2, box - 2)
                                     CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                                 End If
                             Else
@@ -434,7 +437,7 @@ Public Class Form1
                                     'nothing
                                 Else
                                     pen = New SolidBrush(currentColor)
-                                    myRectangle = New Rectangle(dictPair.Key.X, dictPair.Key.Y, box, box)
+                                    myRectangle = New Rectangle(dictPair.Key.X + 1, dictPair.Key.Y + 1, box - 2, box - 2)
                                     CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                                 End If
                             Else
@@ -476,7 +479,7 @@ Public Class Form1
             End If
             If lineTest = False And tool = "line" Then
                 Dim myRectangle As Rectangle
-                myRectangle = New Rectangle((Math.Floor(lineX / box) * box), (Math.Floor(LineY / box) * box), box, box)
+                myRectangle = New Rectangle((Math.Floor(lineX / box) * box) + 1, (Math.Floor(LineY / box) * box) + 1, box - 2, box - 2)
                 CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 AddToBlockDictionary((Math.Floor(lineX / box) * box), (Math.Floor(LineY / box) * box), setMaterial)
                 lineTest = True
@@ -499,7 +502,6 @@ Public Class Form1
         Me.WindowState = FormWindowState.Maximized
         Threading.Thread.Sleep(2500)
         grid = 16
-        ImportDatabaseToolStripMenuItem_Click(e, e)
         For Each dictpair In matterialDictionary
             cmbMaterials.Items.Add(dictpair.Key)
         Next
@@ -972,33 +974,7 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub ImportDatabaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportDatabaseToolStripMenuItem.Click
-        Dim connStr As String = "server=10.0.0.220,1466;User Id=sa;pwd=@a88word;database=Tool"
-        Dim conn As New System.Data.SqlClient.SqlConnection(connStr)
-        Dim comm As New System.Data.SqlClient.SqlCommand
-        comm.CommandText = "SELECT * FROM material"
-        comm.Connection = conn
-        Try
-            conn.Open()
-        Catch ex As Exception
-            connStr = "server=75.73.144.52,1466;User Id=sa;pwd=@a88word;database=Tool"
-            conn = New System.Data.SqlClient.SqlConnection(connStr)
-            comm.Connection = conn
-            conn.Open()
-        Finally
-            Try
-                Dim dr As SqlDataReader = comm.ExecuteReader()
-                While dr.Read
-                    Dim color As Color = Color.FromName(Convert.ToString(dr.Item("Color")))
-                    Dim str As String = Convert.ToString(dr.Item("String"))
-                    matterialDictionary.Remove(str)
-                    matterialDictionary.Add(str, color)
-                End While
-            Catch ex As Exception
-                matterialDictionary.Add("Stone", Color.Gray)
-                matterialDictionary.Add("Brick", Color.Red)
-            End Try
-        End Try
-    End Sub
+    Private Sub cmbMaterials_Click(sender As Object, e As EventArgs) Handles cmbMaterials.Click
 
+    End Sub
 End Class
