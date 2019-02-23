@@ -16,10 +16,13 @@ Public Class Form1
     Dim blocksY As Int16
     Public box As Int16 = 10
     Public tool As String = "point" 'variable for storing the tool used when drawing. Also initializes the tool as point.
+    Public circleTest As Boolean = False 'variable to deside to get second point when making a circle
     Public recTest As Boolean = False 'variable to deside to get second point when making a rectangle
     Public lineTest As Boolean = False 'variable to deside to get second point when making a line
     Dim setMaterial As String 'holds matterial to be stored in dictionary
     Dim pen As Brush = New SolidBrush(Color.Black)
+    Dim circX As Int32 = 0 ' Stores pos.X of first click of circle
+    Dim circY As Int32 = 0 ' Stores pos.Y of first click of circle
     Dim lineX As Int32 = 0 ' Stores pos.X of first click of line
     Dim LineY As Int32 = 0 ' Stores pos.Y of first click of line
     Dim reccX As Int32 = 0 ' Stores pos.X of first click of rectangle
@@ -43,6 +46,28 @@ Public Class Form1
     Dim matterialDictionary As Dictionary(Of String, Color) = New Dictionary(Of String, Color)
     Dim blockStack As Stack(Of Dictionary(Of Vector, Color)) = New Stack(Of Dictionary(Of Vector, Color))
     Dim tempDictionary As Dictionary(Of Vector, String) = New Dictionary(Of Vector, String)
+
+    Sub drawCircle(radius As Int32, circX As Int32)
+        Dim storage As Int32
+        For i As Int32 = Math.Floor(circX / box - radius) To Math.Floor(circX / box + radius)
+            If i < Math.Floor(circX / box) Then
+                While Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box - storage > 10
+                    storage = storage + 10
+                    AddToBlockDictionary(i * box, Math.Floor(circY / box) * box + storage, setMaterial)
+                    AddToBlockDictionary(i * box, Math.Floor(circY / box) * box - storage, setMaterial)
+                End While
+            ElseIf i > Math.Floor(circX / box) Then
+                While storage - Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box > 10
+                    storage = storage - 10
+                    AddToBlockDictionary((i - 1) * box, Math.Floor(circY / box) * box + storage, setMaterial)
+                    AddToBlockDictionary((i - 1) * box, Math.Floor(circY / box) * box - storage, setMaterial)
+                End While
+            End If
+            storage = Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box
+            AddToBlockDictionary(i * box, Math.Floor(circY / box) * box + storage, setMaterial)
+            AddToBlockDictionary(i * box, Math.Floor(circY / box) * box - storage, setMaterial)
+        Next
+    End Sub
 
     Sub getMatterialList()
         'Dim bf As New Runtime.Serialization.Formatters.Binary.BinaryFormatter()
@@ -205,28 +230,28 @@ Public Class Form1
 
 
     'experimental subRoutine
-    Private Sub boxSize(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseWheel
-        If pos.Delta < 0 Then
-            If box = 10 Then
-                '''''''nothing
-            Else
-                offSetX = offSetX / box
-                box -= 10
-                offSetX = offSetX * box
-            End If
-        Else
-            If box = 10240 Then
-                ''''''''''nothing    
-            Else
-                offSetX = offSetX / box
-                box += 10
-                offSetX = offSetX * box
-            End If
-        End If
-        clearForm()
-        loadBlocks()
-        loadGrid()
-    End Sub
+    'Private Sub boxSize(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseWheel
+    '    If pos.Delta < 0 Then
+    '        If box = 10 Then
+    '            '''''''nothing
+    '        Else
+    '            offSetX = offSetX / box
+    '            box -= 10
+    '            offSetX = offSetX * box
+    '        End If
+    '    Else
+    '        If box = 10240 Then
+    '            ''''''''''nothing    
+    '        Else
+    '            offSetX = offSetX / box
+    '            box += 10
+    '            offSetX = offSetX * box
+    '        End If
+    '    End If
+    '    clearForm()
+    '    loadBlocks()
+    '    loadGrid()
+    'End Sub
 
     Private Sub boxClick(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseClick, MyBase.MouseMove
         If pos.Button = MouseButtons.Left Or pos.Button = MouseButtons.Right Then
@@ -266,8 +291,8 @@ Public Class Form1
                         If Math.Floor(reccY / 10) < Math.Floor(pos.Y / 10) Then
                             isPosY = 1
                         End If
-                        For i = 1 To Math.Abs((reccX / 10) - Math.Floor(pos.X / 10))
-                            For u As Int32 = 1 To Math.Abs((reccY / 10) - Math.Floor(pos.Y / 10))
+                        For i = 1 To Math.Abs((reccX / box) - Math.Floor(pos.X / box))
+                            For u As Int32 = 1 To Math.Abs((reccY / box) - Math.Floor(pos.Y / box))
                                 blockPoint.X = (reccX + i * isPosX * box)
                                 blockPoint.Y = (reccY + u * isPosY * box)
                                 blockPoint.Z = layer
@@ -275,7 +300,6 @@ Public Class Form1
                                 tempDictionary.Add(blockPoint, setMaterial)
                             Next
                         Next
-
                     End If
                     For Each dictPair In tempDictionary
                         AddToBlockDictionary(dictPair.Key.X, dictPair.Key.Y, dictPair.Value)
@@ -291,9 +315,6 @@ Public Class Form1
                 CreateGraphics().FillRectangle(pen, rect:=myRectangle)
                 AddToBlockDictionary((Math.Floor(pos.X / box) * box), (Math.Floor(pos.Y / box) * box), setMaterial)
             ElseIf tool = "line" Then
-
-                'y = mx + b
-
                 If lineTest = False Then
                     lineX = pos.X
                     LineY = pos.Y
@@ -318,6 +339,23 @@ Public Class Form1
                     loadBlocks()
                     loadGrid()
                 End If
+            ElseIf tool = "circle" Then
+                If circleTest = False Then
+                    circX = pos.X
+                    circY = pos.Y
+                Else
+                    'Dim toFill = MessageBox.Show("Would you like to fill this Circle", "Fill Circle", MessageBoxButtons.YesNo)
+                    'If toFill = DialogResult.Yes Then
+                    '    Dim rad As Int32 = Math.Sqrt((Math.Floor(pos.X / box) * box - (Math.Floor(circX / box) * box)) ^ 2 + ((Math.Floor(pos.Y / box) * box - (Math.Floor(circY / box) * box))) ^ 2) / box
+                    '    While rad > 0
+                    '        rad = rad - 1
+                    '        drawCircle(rad, circX)
+                    '    End While
+                    'End If
+                    drawCircle(Math.Sqrt((Math.Floor(pos.X / box) * box - (Math.Floor(circX / box) * box)) ^ 2 + ((Math.Floor(pos.Y / box) * box - (Math.Floor(circY / box) * box))) ^ 2) / box, circX)
+                    loadBlocks()
+                    loadGrid()
+                End If
 
             Else
                 Dim myRectangle As Rectangle
@@ -332,6 +370,11 @@ Public Class Form1
 
 
         ElseIf pos.Button = MouseButtons.Right Then
+            If circleTest = True Or recTest = True Or lineTest = True Then
+                circleTest = False
+                lineTest = False
+                recTest = False
+            End If
             Dim penz As Brush = New SolidBrush(BackColor)
             Dim myRectangle As Rectangle
             If ToolStripComboBox2.SelectedIndex = 1 Then
@@ -363,7 +406,6 @@ Public Class Form1
             Else
                 scrollX = Math.Floor(pos.X / box) - scrollX1
                 scrollY = Math.Floor(pos.Y / box) - scrollY1
-
             End If
         Else ''NO button only scroll
             If recTest = True And tool = "rect" Then
@@ -372,6 +414,7 @@ Public Class Form1
                     shapeScrollY = pos.Y
                     scrollBool = True
                 Else
+                    ReccBox.Text = reccX
                     Dim myRectangle As Rectangle
                     If Math.Floor(shapeScrollX / box) * box <> Math.Floor(pos.X / box) * box Or Math.Floor(shapeScrollY / box) * box <> Math.Floor(pos.Y / box) * box Then
                         For Each dictPair In tempDictionary
@@ -448,6 +491,136 @@ Public Class Form1
                 localOffSetX = 0
                 LocalOffSetY = 0
             End If
+            'temp lines
+
+            If lineTest = True Then
+                Dim myRectangle As Rectangle
+                If Math.Floor(shapeScrollX / box) * box <> Math.Floor(pos.X / box) * box Or Math.Floor(shapeScrollY / box) * box <> Math.Floor(pos.Y / box) * box Then
+                    For Each dictPair In tempDictionary
+                        If dictPair.Key.Z = layer Then
+                            If dictPair.Key.X + offSetX < 110 Or dictPair.Key.Y + offSetY < 39 Then
+                                'nothing
+                            Else
+                                pen = New SolidBrush(MyBase.BackColor)
+                                myRectangle = New Rectangle(dictPair.Key.X + localOffSetX + 1, dictPair.Key.Y + LocalOffSetY + 1, box - 2, box - 2)
+                                CreateGraphics().FillRectangle(pen, rect:=myRectangle)
+                            End If
+                        Else
+                        End If
+                    Next
+                    tempDictionary.Clear()
+                    Dim blockpoint As New Vector
+                    Dim isLinePositive As Int32 = 1 ' tests for if line should be possitive or negative
+                    If Math.Floor(pos.X / 10) = Math.Floor(lineX / 10) Then ' if the line drawn is vertical
+                        If LineY > pos.Y Then
+                            isLinePositive = -1
+                        End If
+                        For i As Int32 = 0 To Math.Abs(Math.Floor(LineY) - Math.Floor(pos.Y))
+                            blockpoint.X = (Math.Floor((lineX) / box) * box)
+                            blockpoint.Y = (Math.Floor((LineY + i * isLinePositive) / box) * box)
+                            blockpoint.Z = layer
+                            tempDictionary.Remove(blockpoint)
+                            tempDictionary.Add(blockpoint, setMaterial)
+                        Next
+                    Else ' if the line has a slope
+                        Dim lineSlope As Double = (Math.Floor(LineY / box) * 10 - Math.Floor(pos.Y / box) * 10) / (Math.Floor(lineX / box) * 10 - Math.Floor(pos.X / box) * 10)
+                        If lineX > pos.X Then
+                            isLinePositive = -1
+                        End If
+                        For i As Int32 = 0 To Math.Abs(Math.Floor(pos.X) - Math.Floor(lineX))
+                            blockpoint.X = (Math.Floor((lineX + i * isLinePositive) / box) * box)
+                            blockpoint.Y = (Math.Floor((lineSlope * i * isLinePositive + LineY) / box) * box)
+                            blockpoint.Z = layer
+                            tempDictionary.Remove(blockpoint)
+                            tempDictionary.Add(blockpoint, setMaterial)
+                        Next
+                    End If
+                    For Each dictPair In tempDictionary
+                        If dictPair.Key.Z = layer Then
+                            If dictPair.Key.X + offSetX + localOffSetX < 110 Or dictPair.Key.Y + offSetY + LocalOffSetY < 39 Then
+                                'nothing
+                            Else
+                                pen = New SolidBrush(currentColor)
+                                myRectangle = New Rectangle(dictPair.Key.X + 1, dictPair.Key.Y + 1, box - 2, box - 2)
+                                CreateGraphics().FillRectangle(pen, rect:=myRectangle)
+                            End If
+                        Else
+                        End If
+                    Next
+                    loadBlocks()
+                End If
+            End If
+            'circle
+            If circleTest = True Then
+                If Math.Floor(shapeScrollX / box) * box <> Math.Floor(pos.X / box) * box Or Math.Floor(shapeScrollY / box) * box <> Math.Floor(pos.Y / box) * box Then
+                    Dim myRectangle As Rectangle
+                    For Each dictPair In tempDictionary
+                        If dictPair.Key.Z = layer Then
+                            If dictPair.Key.X + offSetX < 110 Or dictPair.Key.Y + offSetY < 39 Then
+                                'nothing
+                            Else
+                                pen = New SolidBrush(MyBase.BackColor)
+                                myRectangle = New Rectangle(dictPair.Key.X + localOffSetX + 1, dictPair.Key.Y + LocalOffSetY + 1, box - 2, box - 2)
+                                CreateGraphics().FillRectangle(pen, rect:=myRectangle)
+                            End If
+                        Else
+                        End If
+                    Next
+                    tempDictionary.Clear()
+                    Dim blockpoint As New Vector
+                    Dim radius As Int32 = Math.Sqrt((Math.Floor(pos.X / box) * box - (Math.Floor(circX / box) * box)) ^ 2 + ((Math.Floor(pos.Y / box) * box - (Math.Floor(circY / box) * box))) ^ 2) / box
+                    Dim storage As Int32
+                    For i As Int32 = Math.Floor(circX / box - radius) To Math.Floor(circX / box + radius)
+                        If i < Math.Floor(circX / box) Then
+                            While Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box - storage > 10
+                                storage = storage + 10
+                                blockpoint.X = i * box
+                                blockpoint.Y = Math.Floor(circY / box) * box + storage
+                                blockpoint.Z = layer
+                                tempDictionary.Remove(blockpoint)
+                                tempDictionary.Add(blockpoint, setMaterial)
+                                blockpoint.Y = Math.Floor(circY / box) * box - storage
+                                tempDictionary.Remove(blockpoint)
+                                tempDictionary.Add(blockpoint, setMaterial)
+                            End While
+                        ElseIf i > Math.Floor(circX / box) Then
+                            While storage - Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box > 10
+                                storage = storage - 10
+                                blockpoint.X = (i - 1) * box
+                                blockpoint.Y = Math.Floor(circY / box) * box + storage
+                                blockpoint.Z = layer
+                                tempDictionary.Remove(blockpoint)
+                                tempDictionary.Add(blockpoint, setMaterial)
+                                blockpoint.Y = Math.Floor(circY / box) * box - storage
+                                tempDictionary.Remove(blockpoint)
+                                tempDictionary.Add(blockpoint, setMaterial)
+                            End While
+                        End If
+                        storage = Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box
+                        blockpoint.X = i * box
+                        blockpoint.Y = Math.Floor(circY / box) * box + storage
+                        blockpoint.Z = layer
+                        tempDictionary.Remove(blockpoint)
+                        tempDictionary.Add(blockpoint, setMaterial)
+                        blockpoint.Y = Math.Floor(circY / box) * box - storage
+                        tempDictionary.Remove(blockpoint)
+                        tempDictionary.Add(blockpoint, setMaterial)
+                    Next
+                    For Each dictPair In tempDictionary
+                        If dictPair.Key.Z = layer Then
+                            If dictPair.Key.X + offSetX + localOffSetX < 110 Or dictPair.Key.Y + offSetY + LocalOffSetY < 39 Then
+                                'nothing
+                            Else
+                                pen = New SolidBrush(currentColor)
+                                myRectangle = New Rectangle(dictPair.Key.X + 1, dictPair.Key.Y + 1, box - 2, box - 2)
+                                CreateGraphics().FillRectangle(pen, rect:=myRectangle)
+                            End If
+                        Else
+                        End If
+                    Next
+                    loadBlocks()
+                End If
+            End If
         End If
     End Sub
 
@@ -455,6 +628,12 @@ Public Class Form1
         If move.Button = MouseButtons.Middle Then
             offSetX = offSetX + (scrollX * box)
             offSetY = offSetY + (scrollY * box)
+            reccY = reccY + scrollY * box
+            reccX = reccX + scrollX * box
+            LineY = LineY + scrollY * box
+            lineX = lineX + scrollX * box
+            circY = circY + scrollY * box
+            circX = circX + scrollX * box
             scrollY = 0
             scrollX = 0
             offsetBool = False
@@ -485,6 +664,11 @@ Public Class Form1
                 lineTest = True
             Else
                 lineTest = False
+            End If
+            If circleTest = False And tool = "circle" Then
+                circleTest = True
+            Else
+                circleTest = False
             End If
             clearForm()
             loadBlocks()
@@ -517,10 +701,6 @@ Public Class Form1
 
     Private Sub btbTest_Click(sender As Object, e As EventArgs)
         LoadMaterialsToolStripMenuItem_Click(e, e)
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs)
-        tool = "rect"
     End Sub
 
     'Save functions
@@ -684,6 +864,8 @@ Public Class Form1
             tool = "rect"
         ElseIf ToolComboBox.SelectedItem = "line" Then
             tool = "line"
+        ElseIf ToolComboBox.SelectedItem = "circle" Then
+            tool = "circle"
         End If
         ToolsToolStripMenuItem.HideDropDown()
     End Sub
@@ -888,22 +1070,24 @@ Public Class Form1
         Else
             setLocation = False
             tempDictionary.Clear()
+            Dim changeX As Int32
+            Dim changeY As Int32
+            Dim changeZ As Int32
+
             For Each dictPair In blockDictionary
-                Dim changeX As Int32
-                Dim changeY As Int32
-                Dim changeZ As Int32
-                If setLocationX > 0 Then
-                    changeX = setLocationX
-                ElseIf dictPair.Key.X < 0 Then
-                    changeX = setLocationX * -1
+
+                If Math.Floor(setLocationX / box) > 0 Then
+                    changeX = Math.Floor(setLocationX / box)
+                ElseIf Math.Floor(setLocationX / box) < 0 Then
+                    changeX = Math.Floor(setLocationX / box) * -1
                 Else
                     changeX = 0
                 End If
 
-                If setLocationY > 0 Then
-                    changeY = setLocationY * -1
-                ElseIf dictPair.Key.Y < 0 Then
-                    changeY = setLocationY
+                If Math.Floor(setLocationY / box) > 0 Then
+                    changeY = Math.Floor(setLocationY / box) * -1
+                ElseIf Math.Floor(setLocationY / box) < 0 Then
+                    changeY = Math.Floor(setLocationY / box)
                 Else
                     changeY = 0
                 End If
@@ -917,10 +1101,10 @@ Public Class Form1
                 End If
 
                 Dim tempVec As New Vector
-                tempVec.X = dictPair.Key.X - changeX * 10
-                tempVec.Y = dictPair.Key.Y - changeY * 10
-                tempVec.Z = dictPair.Key.Z - changeZ
                 tempDictionary.Remove(tempVec)
+                tempVec.X = dictPair.Key.X / box - changeX
+                tempVec.Y = dictPair.Key.Y / box - changeY
+                tempVec.Z = dictPair.Key.Z - changeZ
                 tempDictionary.Add(tempVec, dictPair.Value)
             Next
 
@@ -936,9 +1120,10 @@ Public Class Form1
                         Dim cfile As String = My.Resources.BlockList
                         fileName.WriteLine()
                         For Each dictPair In tempDictionary
-                            fileName.WriteLine("{" & "{" & dictPair.Key.X / 10 & "," & dictPair.Key.Y / 10 & "," & dictPair.Key.Z & "}" & "," & dictPair.Value & "}" & ",")
+                            fileName.WriteLine("{" & "{" & dictPair.Key.X & "," & dictPair.Key.Y & "," & dictPair.Key.Z & "}" & "," & dictPair.Value & "}" & ",")
                         Next
                     Finally
+                        tempDictionary.Clear()
                         fileName.Close()
                     End Try
                 End If
@@ -972,9 +1157,5 @@ Public Class Form1
         For Each dictpair In matterialDictionary
             cmbMaterials.Items.Add(dictpair.Key)
         Next
-    End Sub
-
-    Private Sub cmbMaterials_Click(sender As Object, e As EventArgs) Handles cmbMaterials.Click
-
     End Sub
 End Class

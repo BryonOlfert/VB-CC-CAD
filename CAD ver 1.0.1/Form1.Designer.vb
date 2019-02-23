@@ -58,6 +58,7 @@ Partial Class Form1
         Me.cmbRef = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ReccBox = New System.Windows.Forms.TextBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -128,7 +129,7 @@ Partial Class Form1
         'ToolComboBox
         '
         Me.ToolComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ToolComboBox.Items.AddRange(New Object() {"point", "rectangle", "line"})
+        Me.ToolComboBox.Items.AddRange(New Object() {"point", "rectangle", "line", "circle"})
         Me.ToolComboBox.Name = "ToolComboBox"
         Me.ToolComboBox.Size = New System.Drawing.Size(121, 23)
         '
@@ -291,11 +292,20 @@ Partial Class Form1
         Me.Label2.TabIndex = 10
         Me.Label2.Text = "Reference layer"
         '
+        'ReccBox
+        '
+        Me.ReccBox.Location = New System.Drawing.Point(13, 45)
+        Me.ReccBox.Multiline = True
+        Me.ReccBox.Name = "ReccBox"
+        Me.ReccBox.Size = New System.Drawing.Size(57, 84)
+        Me.ReccBox.TabIndex = 11
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(852, 563)
+        Me.Controls.Add(Me.ReccBox)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cmbRef)
@@ -348,4 +358,5 @@ Partial Class Form1
     Friend WithEvents FileToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents DeleteSizeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripComboBox2 As ToolStripComboBox
+    Friend WithEvents ReccBox As TextBox
 End Class
