@@ -67,6 +67,7 @@ Public Class Form1
             AddToBlockDictionary(i * box, Math.Floor(circY / box) * box + storage, setMaterial)
             AddToBlockDictionary(i * box, Math.Floor(circY / box) * box - storage, setMaterial)
         Next
+        lengthLabel.Hide()
     End Sub
 
     Sub getMatterialList()
@@ -256,8 +257,8 @@ Public Class Form1
     Private Sub boxClick(ByVal sender As Object, ByVal pos As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseClick, MyBase.MouseMove
         If pos.Button = MouseButtons.Left Or pos.Button = MouseButtons.Right Then
             If setLocation = True Then
-                setLocationX = Math.Floor(pos.X * box) / box
-                setLocationY = Math.Floor(pos.Y * box) / box
+                setLocationX = Math.Floor(pos.X / box) * box - offSetX
+                setLocationY = Math.Floor(pos.Y / box) * box - offSetY
                 setLocationZ = layer
                 menuFileExport_Click(Nothing, Nothing)
                 Exit Sub
@@ -280,6 +281,7 @@ Public Class Form1
                 If recTest = False Then
                     'happens in mouseUp subroutine
                 Else
+                    lengthLabel.Hide()
                     Dim toFill = MessageBox.Show("Would you like to fill this Rectangle", "Fill Rectangle", MessageBoxButtons.YesNo)
                     If toFill = DialogResult.Yes Then
                         Dim isPosY = -1
@@ -319,6 +321,7 @@ Public Class Form1
                     lineX = pos.X
                     LineY = pos.Y
                 Else
+                    lengthLabel.Hide()
                     Dim isLinePositive As Int32 = 1 ' tests for if line should be possitive or negative
                     If Math.Floor(pos.X / 10) = Math.Floor(lineX / 10) Then ' if the line drawn is vertical
                         If LineY > pos.Y Then
@@ -374,6 +377,7 @@ Public Class Form1
                 circleTest = False
                 lineTest = False
                 recTest = False
+                lengthLabel.Hide()
             End If
             Dim penz As Brush = New SolidBrush(BackColor)
             Dim myRectangle As Rectangle
@@ -414,8 +418,10 @@ Public Class Form1
                     shapeScrollY = pos.Y
                     scrollBool = True
                 Else
-                    ReccBox.Text = reccX
                     Dim myRectangle As Rectangle
+                    lengthLabel.Text = "x: " & Math.Floor(Math.Abs(pos.X - reccX) / box) & " y: " & Math.Floor(Math.Abs(pos.Y - reccY) / box)
+                    Me.lengthLabel.Location = New System.Drawing.Point(pos.X + 20, pos.Y)
+                    lengthLabel.Show()
                     If Math.Floor(shapeScrollX / box) * box <> Math.Floor(pos.X / box) * box Or Math.Floor(shapeScrollY / box) * box <> Math.Floor(pos.Y / box) * box Then
                         For Each dictPair In tempDictionary
                             If dictPair.Key.Z = layer Then
@@ -522,6 +528,9 @@ Public Class Form1
                             tempDictionary.Remove(blockpoint)
                             tempDictionary.Add(blockpoint, setMaterial)
                         Next
+                        lengthLabel.Text = Math.Floor(Math.Abs(Math.Floor(LineY) - Math.Floor(pos.Y)) / box)
+                        Me.lengthLabel.Location = New System.Drawing.Point(pos.X + 20, pos.Y)
+                        lengthLabel.Show()
                     Else ' if the line has a slope
                         Dim lineSlope As Double = (Math.Floor(LineY / box) * 10 - Math.Floor(pos.Y / box) * 10) / (Math.Floor(lineX / box) * 10 - Math.Floor(pos.X / box) * 10)
                         If lineX > pos.X Then
@@ -534,6 +543,9 @@ Public Class Form1
                             tempDictionary.Remove(blockpoint)
                             tempDictionary.Add(blockpoint, setMaterial)
                         Next
+                        lengthLabel.Text = Math.Floor(Math.Sqrt((Math.Floor(pos.X) - Math.Floor(lineX)) ^ 2 + ((Math.Floor(pos.Y) - Math.Floor(LineY))) ^ 2) / box)
+                        Me.lengthLabel.Location = New System.Drawing.Point(pos.X + 20, pos.Y)
+                        lengthLabel.Show()
                     End If
                     For Each dictPair In tempDictionary
                         If dictPair.Key.Z = layer Then
@@ -570,6 +582,9 @@ Public Class Form1
                     Dim blockpoint As New Vector
                     Dim radius As Int32 = Math.Sqrt((Math.Floor(pos.X / box) * box - (Math.Floor(circX / box) * box)) ^ 2 + ((Math.Floor(pos.Y / box) * box - (Math.Floor(circY / box) * box))) ^ 2) / box
                     Dim storage As Int32
+                    lengthLabel.Text = radius
+                    Me.lengthLabel.Location = New System.Drawing.Point(pos.X + 20, pos.Y)
+                    lengthLabel.Show()
                     For i As Int32 = Math.Floor(circX / box - radius) To Math.Floor(circX / box + radius)
                         If i < Math.Floor(circX / box) Then
                             While Math.Floor(Math.Sqrt((radius * box) ^ 2 - (i * box - Math.Floor(circX / box) * box) ^ 2) / box) * box - storage > 10
@@ -677,6 +692,10 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lengthLabel.BackColor = Color.Transparent
+        lengthLabel.Parent.FindForm()
+        lengthLabel.SendToBack()
+        lengthLabel.Hide()
         For i As Int16 = -150 To 150
             cmbLayer.Items.Add(i)
             cmbRef.Items.Add(i)
@@ -1073,38 +1092,36 @@ Public Class Form1
             Dim changeX As Int32
             Dim changeY As Int32
             Dim changeZ As Int32
-
+            Dim tempVec As New Vector
             For Each dictPair In blockDictionary
 
                 If Math.Floor(setLocationX / box) > 0 Then
-                    changeX = Math.Floor(setLocationX / box)
+                    changeX = Math.Floor(setLocationX)
                 ElseIf Math.Floor(setLocationX / box) < 0 Then
-                    changeX = Math.Floor(setLocationX / box) * -1
+                    changeX = Math.Floor(setLocationX) * -1
                 Else
                     changeX = 0
                 End If
 
                 If Math.Floor(setLocationY / box) > 0 Then
-                    changeY = Math.Floor(setLocationY / box) * -1
+                    changeY = Math.Floor(setLocationY)
                 ElseIf Math.Floor(setLocationY / box) < 0 Then
-                    changeY = Math.Floor(setLocationY / box)
+                    changeY = Math.Floor(setLocationY) * -1
                 Else
                     changeY = 0
                 End If
 
                 If setLocationZ > 0 Then
-                    changeY = setLocationZ
+                    changeZ = setLocationZ
                 ElseIf dictPair.Key.Z < 0 Then
                     changeZ = setLocationZ * -1
                 Else
                     changeZ = 0
                 End If
-
-                Dim tempVec As New Vector
-                tempDictionary.Remove(tempVec)
-                tempVec.X = dictPair.Key.X / box - changeX
-                tempVec.Y = dictPair.Key.Y / box - changeY
+                tempVec.X = (dictPair.Key.X - changeX) / box
+                tempVec.Y = -1 * ((dictPair.Key.Y - changeY) / box)
                 tempVec.Z = dictPair.Key.Z - changeZ
+                tempDictionary.Remove(tempVec)
                 tempDictionary.Add(tempVec, dictPair.Value)
             Next
 
@@ -1120,7 +1137,7 @@ Public Class Form1
                         Dim cfile As String = My.Resources.BlockList
                         fileName.WriteLine()
                         For Each dictPair In tempDictionary
-                            fileName.WriteLine("{" & "{" & dictPair.Key.X & "," & dictPair.Key.Y & "," & dictPair.Key.Z & "}" & "," & dictPair.Value & "}" & ",")
+                            fileName.WriteLine(dictPair.Key.X & "," & dictPair.Key.Y & "," & dictPair.Key.Z & "," & dictPair.Value & ",")
                         Next
                     Finally
                         tempDictionary.Clear()
